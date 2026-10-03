@@ -2,74 +2,266 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title> Adivina el Número</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 Adivina el Número</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .contenedor {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px 30px;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .subtitulo {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .caja {
+            background: #f3f4f6;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .etiqueta {
+            display: block;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            font-size: 1.1em;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            font-size: 1em;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 5px 0;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .secundario {
+            background: #e5e7eb;
+            color: #4b5563;
+        }
+
+        .resultado {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .correcto {
+            background: #d1fae5;
+            color: #065f46;
+            border: 2px solid #34d399;
+        }
+
+        .mayor {
+            background: #fef3c7;
+            color: #92400e;
+            border: 2px solid #fbbf24;
+        }
+
+        .menor {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 2px solid #60a5fa;
+        }
+
+        .agotado {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 2px solid #f87171;
+        }
+
+        .numeros-probados {
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .intentos {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1> Adivina el Número</h1>
+    <div class="contenedor">
+        <h1>🎮 Adivina el Número</h1>
+        <p class="subtitulo">Entre 1 y 100 — Tienes 10 intentos 💜</p>
+
+        <div class="caja">
+            <div class="intentos" id="intentos">Intento: 1 de 10</div>
+            
+            <label class="etiqueta">Escribe tu número:</label>
+            <input type="number" id="numeroEntrada" min="1" max="100" placeholder="Ej: 42">
+            
+            <button id="btnAdivinar" onclick="adivinar()"> Adivinar</button>
+            
+            <div class="numeros-probados">
+                Números probados: <span id="listaNumeros">Ninguno</span>
+            </div>
+        </div>
+
+        <div id="cajaResultado" class="resultado"></div>
+
+        <button id="btnReiniciar" class="secundario" onclick="reiniciar()" style="display: none;">🔄 Jugar de nuevo</button>
+    </div>
 
     <script>
         // Victoria Alexandra Casillas Rodríguez
-        // Tarea 2: Juego adivina el número
+        // Tarea 2: Juego adivina el número — Con diseño
+
+        let numeroSecreto;
+        let intentos;
+        const maxIntentos = 10;
+        let numerosProbados = [];
+        let acertado = false;
 
         function iniciarJuego() {
-            // Número aleatorio entre 1 y 100
-            const numeroSecreto = Math.floor(Math.random() * 100) + 1;
-            let intentos = 0;
-            const maxIntentos = 10;
-            const numerosProbados = [];
-            let acertado = false;
+            numeroSecreto = Math.floor(Math.random() * 100) + 1;
+            intentos = 0;
+            numerosProbados = [];
+            acertado = false;
+            
+            document.getElementById("intentos").textContent = Intento: ${intentos + 1} de ${maxIntentos};
+            document.getElementById("listaNumeros").textContent = "Ninguno";
+            document.getElementById("numeroEntrada").value = "";
+            document.getElementById("cajaResultado").style.display = "none";
+            document.getElementById("btnReiniciar").style.display = "none";
+            document.getElementById("btnAdivinar").disabled = false;
+            document.getElementById("numeroEntrada").disabled = false;
+        }
 
-            alert("¡Bienvenida! \nAdivina el número entre 1 y 100\nTienes 10 intentos ");
+        function adivinar() {
+            if (acertado) return;
 
-            while (intentos < maxIntentos && !acertado) {
-                const entrada = prompt(
-                    Intento ${intentos + 1} de ${maxIntentos}\n +
-                    Números probados: ${numerosProbados.join(', ') || 'Ninguno'}\n +
-                    "Ingresa un número:"
-                );
+            const entrada = document.getElementById("numeroEntrada");
+            const numero = parseInt(entrada.value);
+            const cajaResultado = document.getElementById("cajaResultado");
 
-                // Si cancela
-                if (entrada === null) {
-                    alert("Juego cancelado.");
-                    return;
-                }
-
-                const numero = parseInt(entrada);
-
-                // Validar entrada
-                if (isNaN(numero) || numero < 1 || numero > 100) {
-                    alert(" Por favor, escribe un número VÁLIDO entre 1 y 100");
-                    continue;
-                }
-
-                intentos++;
-                numerosProbados.push(numero);
-
-                // Comparar con el número secreto
-                if (numero === numeroSecreto) {
-                    acertado = true;
-                    alert( ¡Felicidades, acertaste!\nEl número era: ${numeroSecreto}\nLo lograste en ${intentos} intento(s) );
-                } else if (numero < numeroSecreto) {
-                    alert( Incorrecto\nEl número secreto es MAYOR que ${numero});
-                } else {
-                    alert( Incorrecto\nEl número secreto es MENOR que ${numero});
-                }
+            // Validación
+            if (isNaN(numero) || numero < 1 || numero > 100) {
+                cajaResultado.className = "resultado";
+                cajaResultado.style.display = "block";
+                cajaResultado.innerHTML = "⚠️ Escribe un número VÁLIDO entre 1 y 100";
+                cajaResultado.style.background = "#fef3c7";
+                cajaResultado.style.color = "#92400e";
+                cajaResultado.style.border = "2px solid #fbbf24";
+                return;
             }
 
-            // Si se acabaron los intentos
-            if (!acertado) {
-                alert( Se agotaron los ${maxIntentos} intentos\nEl número era: ${numeroSecreto});
-            }
+            intentos++;
+            numerosProbados.push(numero);
+            
+            // Actualizar vista
+            document.getElementById("intentos").textContent = Intento: ${intentos} de ${maxIntentos};
+            document.getElementById("listaNumeros").textContent = numerosProbados.join(", ");
+            entrada.value = "";
 
-            // Volver a jugar
-            if (confirm("¿Quieres volver a jugar? ")) {
-                iniciarJuego();
+            // Comparar
+            if (numero === numeroSecreto) {
+                acertado = true;
+                cajaResultado.className = "resultado correcto";
+                cajaResultado.innerHTML = 🎉 ¡Felicidades, acertaste!<br>El número era: ${numeroSecreto}<br>Lo lograste en ${intentos} intento(s) ✅;
+                terminarJuego();
+            } else if (numero < numeroSecreto) {
+                cajaResultado.className = "resultado mayor";
+                cajaResultado.innerHTML = ❌ Incorrecto<br>El número secreto es <strong>MAYOR</strong> que ${numero};
             } else {
-                alert("¡Gracias por jugar! ");
+                cajaResultado.className = "resultado menor";
+                cajaResultado.innerHTML = ❌ Incorrecto<br>El número secreto es <strong>MENOR</strong> que ${numero};
+            }
+
+            cajaResultado.style.display = "block";
+
+            // ¿Se acabaron los intentos?
+            if (!acertado && intentos >= maxIntentos) {
+                cajaResultado.className = "resultado agotado";
+                cajaResultado.innerHTML = Se agotaron los ${maxIntentos} intentos<br>El número era: ${numeroSecreto};
+                terminarJuego();
             }
         }
 
-        // Iniciar el juego al cargar la página
+        function terminarJuego() {
+            document.getElementById("btnAdivinar").disabled = true;
+            document.getElementById("numeroEntrada").disabled = true;
+            document.getElementById("btnReiniciar").style.display = "block";
+        }
+
+        function reiniciar() {
+            iniciarJuego();
+        }
+
+        // Permitir presionar Enter para adivinar
+        document.getElementById("numeroEntrada").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") adivinar();
+        });
+
+        // Iniciar al cargar
         iniciarJuego();
     </script>
 </body>
