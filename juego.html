@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title> Adivina el Número</title>
+</head>
+<body>
+    <h1> Adivina el Número</h1>
+
+    <script>
+        // Victoria Alexandra Casillas Rodríguez
+        // Tarea 2: Juego adivina el número
+
+        function iniciarJuego() {
+            // Número aleatorio entre 1 y 100
+            const numeroSecreto = Math.floor(Math.random() * 100) + 1;
+            let intentos = 0;
+            const maxIntentos = 10;
+            const numerosProbados = [];
+            let acertado = false;
+
+            alert("¡Bienvenida! \nAdivina el número entre 1 y 100\nTienes 10 intentos ");
+
+            while (intentos < maxIntentos && !acertado) {
+                const entrada = prompt(
+                    Intento ${intentos + 1} de ${maxIntentos}\n +
+                    Números probados: ${numerosProbados.join(', ') || 'Ninguno'}\n +
+                    "Ingresa un número:"
+                );
+
+                // Si cancela
+                if (entrada === null) {
+                    alert("Juego cancelado.");
+                    return;
+                }
+
+                const numero = parseInt(entrada);
+
+                // Validar entrada
+                if (isNaN(numero) || numero < 1 || numero > 100) {
+                    alert(" Por favor, escribe un número VÁLIDO entre 1 y 100");
+                    continue;
+                }
+
+                intentos++;
+                numerosProbados.push(numero);
+
+                // Comparar con el número secreto
+                if (numero === numeroSecreto) {
+                    acertado = true;
+                    alert( ¡Felicidades, acertaste!\nEl número era: ${numeroSecreto}\nLo lograste en ${intentos} intento(s) );
+                } else if (numero < numeroSecreto) {
+                    alert( Incorrecto\nEl número secreto es MAYOR que ${numero});
+                } else {
+                    alert( Incorrecto\nEl número secreto es MENOR que ${numero});
+                }
+            }
+
+            // Si se acabaron los intentos
+            if (!acertado) {
+                alert( Se agotaron los ${maxIntentos} intentos\nEl número era: ${numeroSecreto});
+            }
+
+            // Volver a jugar
+            if (confirm("¿Quieres volver a jugar? ")) {
+                iniciarJuego();
+            } else {
+                alert("¡Gracias por jugar! ");
+            }
+        }
+
+        // Iniciar el juego al cargar la página
+        iniciarJuego();
+    </script>
+</body>
+</html>
