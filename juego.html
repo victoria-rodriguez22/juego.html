@@ -159,7 +159,7 @@
             <label class="etiqueta">Escribe tu número:</label>
             <input type="number" id="numeroEntrada" min="1" max="100" placeholder="Ej: 42">
             
-            <button id="btnAdivinar" onclick="adivinar()"> Adivinar</button>
+            <button id="btnAdivinar" onclick="adivinar()">🔮 Adivinar</button>
             
             <div class="numeros-probados">
                 Números probados: <span id="listaNumeros">Ninguno</span>
@@ -173,21 +173,22 @@
 
     <script>
         // Victoria Alexandra Casillas Rodríguez
-        // Tarea 2: Juego adivina el número — Con diseño
+        // Tarea 2: Juego Adivina el Número ✅ Funcional
 
         let numeroSecreto;
         let intentos;
-        const maxIntentos = 10;
+        const MAX_INTENTOS = 10;
         let numerosProbados = [];
-        let acertado = false;
+        let juegoTerminado = false;
 
         function iniciarJuego() {
             numeroSecreto = Math.floor(Math.random() * 100) + 1;
             intentos = 0;
             numerosProbados = [];
-            acertado = false;
+            juegoTerminado = false;
             
-            document.getElementById("intentos").textContent = Intento: ${intentos + 1} de ${maxIntentos};
+            // Reiniciar vista
+            document.getElementById("intentos").textContent = Intento: 1 de ${MAX_INTENTOS};
             document.getElementById("listaNumeros").textContent = "Ninguno";
             document.getElementById("numeroEntrada").value = "";
             document.getElementById("cajaResultado").style.display = "none";
@@ -197,7 +198,7 @@
         }
 
         function adivinar() {
-            if (acertado) return;
+            if (juegoTerminado) return;
 
             const entrada = document.getElementById("numeroEntrada");
             const numero = parseInt(entrada.value);
@@ -207,10 +208,10 @@
             if (isNaN(numero) || numero < 1 || numero > 100) {
                 cajaResultado.className = "resultado";
                 cajaResultado.style.display = "block";
-                cajaResultado.innerHTML = "⚠️ Escribe un número VÁLIDO entre 1 y 100";
                 cajaResultado.style.background = "#fef3c7";
                 cajaResultado.style.color = "#92400e";
                 cajaResultado.style.border = "2px solid #fbbf24";
+                cajaResultado.innerHTML = "⚠️ Escribe un número VÁLIDO entre 1 y 100";
                 return;
             }
 
@@ -218,16 +219,16 @@
             numerosProbados.push(numero);
             
             // Actualizar vista
-            document.getElementById("intentos").textContent = Intento: ${intentos} de ${maxIntentos};
+            document.getElementById("intentos").textContent = Intento: ${intentos} de ${MAX_INTENTOS};
             document.getElementById("listaNumeros").textContent = numerosProbados.join(", ");
             entrada.value = "";
 
-            // Comparar
+            // Comparar con el número secreto
             if (numero === numeroSecreto) {
-                acertado = true;
+                juegoTerminado = true;
                 cajaResultado.className = "resultado correcto";
                 cajaResultado.innerHTML = 🎉 ¡Felicidades, acertaste!<br>El número era: ${numeroSecreto}<br>Lo lograste en ${intentos} intento(s) ✅;
-                terminarJuego();
+                finalizarJuego();
             } else if (numero < numeroSecreto) {
                 cajaResultado.className = "resultado mayor";
                 cajaResultado.innerHTML = ❌ Incorrecto<br>El número secreto es <strong>MAYOR</strong> que ${numero};
@@ -239,14 +240,15 @@
             cajaResultado.style.display = "block";
 
             // ¿Se acabaron los intentos?
-            if (!acertado && intentos >= maxIntentos) {
+            if (!juegoTerminado && intentos >= MAX_INTENTOS) {
+                juegoTerminado = true;
                 cajaResultado.className = "resultado agotado";
-                cajaResultado.innerHTML = Se agotaron los ${maxIntentos} intentos<br>El número era: ${numeroSecreto};
-                terminarJuego();
+                cajaResultado.innerHTML = 😔 Se agotaron los ${MAX_INTENTOS} intentos<br>El número era: ${numeroSecreto};
+                finalizarJuego();
             }
         }
 
-        function terminarJuego() {
+        function finalizarJuego() {
             document.getElementById("btnAdivinar").disabled = true;
             document.getElementById("numeroEntrada").disabled = true;
             document.getElementById("btnReiniciar").style.display = "block";
@@ -256,12 +258,12 @@
             iniciarJuego();
         }
 
-        // Permitir presionar Enter para adivinar
+        // Presionar Enter = Adivinar
         document.getElementById("numeroEntrada").addEventListener("keypress", function(e) {
             if (e.key === "Enter") adivinar();
         });
 
-        // Iniciar al cargar
+        // Iniciar juego al cargar la página
         iniciarJuego();
     </script>
 </body>
