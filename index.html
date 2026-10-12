@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adivina el número</title>
+    <style>
+        * { box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { max-width: 450px; margin: 3rem auto; padding: 0 1rem; }
+        .caja { background:#f7f9fc; padding:24px; border-radius:12px; }
+        input[type="number"] { width:100%; padding:10px; font-size:1rem; margin:10px 0; }
+        button { padding:10px 16px; font-size:1rem; cursor:pointer; }
+        #mensaje { margin:16px 0; font-size:1.1rem; }
+        #lista‑intentos { padding-left:1.2rem; }
+    </style>
+</head>
+<body>
+    <div class="caja">
+        <h1>🎯 Adivina el número</h1>
+        <p>El número está entre 1 y 100. Tienes 10 intentos.</p>
+
+        <input type="number" id="entrada" min="1" max="100" placeholder="Escribe tu número">
+        <button id="btn‑probar">Probar</button>
+        <button id="btn‑reiniciar" style="display:none;">Volver a jugar</button>
+
+        <div id="mensaje"></div>
+        <h4>Números probados:</h4>
+        <ul id="lista‑intentos"></ul>
+    </div>
+
+    <script>
+        let numeroSecreto;
+        let intentosRestantes;
+        let historial;
+        const entrada = document.getElementById('entrada');
+        const btnProbar = document.getElementById('btn‑probar');
+        const btnReiniciar = document.getElementById('btn‑reiniciar');
+        const cajaMensaje = document.getElementById('mensaje');
+        const listaIntentos = document.getElementById('lista‑intentos');
+
+        function iniciarJuego() {
+            numeroSecreto = Math.floor(Math.random() * 100) + 1;
+            intentosRestantes = 10;
+            historial = [];
+            entrada.value = '';
+            entrada.disabled = false;
+            btnProbar.disabled = false;
+            btnReiniciar.style.display = 'none';
+            cajaMensaje.textContent = '';
+            listaIntentos.innerHTML = '';
+        }
+
+        function finalizarJuego(ganaste) {
+            entrada.disabled = true;
+            btnProbar.disabled = true;
+            btnReiniciar.style.display = 'inline‑block';
+            if (!ganaste) cajaMensaje.textContent = Se acabaron los intentos. El número era: ${numeroSecreto};
+        }
+
+        function probarNumero() {
+            const valor = parseInt(entrada.value);
+            if (isNaN(valor) || valor < 1 || valor > 100) {
+                cajaMensaje.textContent = "Escribe un número válido entre 1 y 100";
+                return;
+            }
+            historial.push(valor);
+            intentosRestantes--;
+
+            // Agregar a lista
+            const li = document.createElement('li');
+            li.textContent = valor;
+            listaIntentos.appendChild(li);
+
+            if (valor === numeroSecreto) {
+                cajaMensaje.textContent = "✅ ¡Acertaste! Felicidades";
+                finalizarJuego(true);
+            } else if (valor < numeroSecreto) {
+                cajaMensaje.textContent = 🔽 Muy bajo. Te quedan ${intentosRestantes} intentos;
+            } else {
+                cajaMensaje.textContent = 🔼 Muy alto. Te quedan ${intentosRestantes} intentos;
+            }
+
+            if (intentosRestantes <= 0 && valor !== numeroSecreto) {
+                finalizarJuego(false);
+            }
+            entrada.value = '';
+            entrada.focus();
+        }
+
+        btnProbar.addEventListener('click', probarNumero);
+        entrada.addEventListener('keydown', e => { if(e.key === 'Enter') probarNumero(); });
+        btnReiniciar.addEventListener('click', iniciarJuego);
+
+        iniciarJuego();
+    </script>
+</body>
+</html>
