@@ -11,7 +11,7 @@
         input[type="number"] { width:100%; padding:10px; font-size:1rem; margin:10px 0; }
         button { padding:10px 16px; font-size:1rem; cursor:pointer; }
         #mensaje { margin:16px 0; font-size:1.1rem; }
-        #lista‑intentos { padding-left:1.2rem; }
+        #listaIntentos { padding-left:1.2rem; }
     </style>
 </head>
 <body>
@@ -20,12 +20,12 @@
         <p>El número está entre 1 y 100. Tienes 10 intentos.</p>
 
         <input type="number" id="entrada" min="1" max="100" placeholder="Escribe tu número">
-        <button id="btn‑probar">Probar</button>
-        <button id="btn‑reiniciar" style="display:none;">Volver a jugar</button>
+        <button id="btnProbar">Probar</button>
+        <button id="btnReiniciar" style="display:none;">Volver a jugar</button>
 
         <div id="mensaje"></div>
         <h4>Números probados:</h4>
-        <ul id="lista‑intentos"></ul>
+        <ul id="listaIntentos"></ul>
     </div>
 
     <script>
@@ -33,10 +33,10 @@
         let intentosRestantes;
         let historial;
         const entrada = document.getElementById('entrada');
-        const btnProbar = document.getElementById('btn‑probar');
-        const btnReiniciar = document.getElementById('btn‑reiniciar');
+        const btnProbar = document.getElementById('btnProbar');
+        const btnReiniciar = document.getElementById('btnReiniciar');
         const cajaMensaje = document.getElementById('mensaje');
-        const listaIntentos = document.getElementById('lista‑intentos');
+        const listaIntentos = document.getElementById('listaIntentos');
 
         function iniciarJuego() {
             numeroSecreto = Math.floor(Math.random() * 100) + 1;
@@ -53,7 +53,7 @@
         function finalizarJuego(ganaste) {
             entrada.disabled = true;
             btnProbar.disabled = true;
-            btnReiniciar.style.display = 'inline‑block';
+            btnReiniciar.style.display = 'inline-block';
             if (!ganaste) cajaMensaje.textContent = Se acabaron los intentos. El número era: ${numeroSecreto};
         }
 
@@ -66,7 +66,6 @@
             historial.push(valor);
             intentosRestantes--;
 
-            // Agregar a lista
             const li = document.createElement('li');
             li.textContent = valor;
             listaIntentos.appendChild(li);
